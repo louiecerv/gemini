@@ -5,5 +5,5 @@ pandas
 seaborn
 scikit-learn
 numpy
-google-cloud-dialogflow
+google-cloud-dialogflow_v2
 googleapis-common-protos
