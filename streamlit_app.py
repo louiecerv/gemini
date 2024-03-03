@@ -36,7 +36,7 @@ def app():
     user_input = st.text_input("Message")
 
     # Once the user hits enter, send the message
-    if user_input:
+    if st.button('Submit'): 
         # Set the input text
         text_input = {"text": user_input}
 
