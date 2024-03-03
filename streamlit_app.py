@@ -9,7 +9,7 @@ from google.protobuf import field_mask_pb2
 # Define the Streamlit app
 def app():
 
-    project_id = "YOUR_PROJECT_ID"
+    project_id = "wvsu-cloud"
     #text_input_field_name = "USER"
 
     st.title("Chatbot using Google Gemini API on Streamlit")
