@@ -2,63 +2,60 @@ import streamlit as st
 import altair as alt
 import numpy as np
 import pandas as pd
-from google.cloud import dialogflow_v2 as dialogflow
-from google.cloud.dialogflow_v2 import conversations_client
-from google.protobuf import field_mask_pb2
+from google.cloud import aiplatform
 
 # Define the Streamlit app
 def app():
 
     project_id = "wvsu-cloud"
-    #text_input_field_name = "USER"
+    api_key = API_KEY 
 
     st.title("Chatbot using Google Gemini API on Streamlit")
     st.subheader("Enter your message below, and I will respond!")
 
-    # Initialize the Gemini client
-    client = conversations_client.ConversationsClient()
+    # Set up headers with the API key
+    headers = {"Authorization": f"Bearer {api_key}"}
 
-    # Set up the initial conversation
-    conversation_config = dialogflow.ConversationsConfig(
-        audio_config=dialogflow.AudioConfig(
-            audio_encoding=dialogflow.AudioEncoding.AUDIO_ENCODING_LINEAR_16
-        )
-    )
-    create_request = conversations_client.CreateConversationRequest(
-        parent=f"projects/{project_id}/locations/global",
-        conversation_id="my-conversation-id",
-        conversation=conversation_config,
-    )
-    conversation_name = client.create_conversation(create_request).name
+    # Initialize the conversation
+    url = f"https://dialogflow.googleapis.com/v2/projects/{project_id}/locations/global/conversations/my-conversation-id"
+
+    # Create initial conversation (if needed, remove if already exists)
+    conversation_config = {
+        "audio_config": {
+            "audio_encoding": "AUDIO_ENCODING_LINEAR_16"
+        }
+    }
+    response = requests.post(url, headers=headers, json=conversation_config)
+    if response.status_code == 200:
+        print("Conversation created successfully")
+    else:
+        print(f"Error creating conversation: {response.text}")
 
     # Input text field
     user_input = st.text_input("Message")
 
-    # Once the user hits enter, send the message to the chatbot
+    # Once the user hits enter, send the message
     if user_input:
-        # Set the input text and associated metadata
-        text_input = dialogflow.TextInput(text=user_input)
-        message = dialogflow.Message(text_input=text_input)
+        # Set the input text
+        text_input = {"text": user_input}
 
-        # Send the message to the Gemini API
-        text_response = client.send_message(
-            request={
-                "conversation": conversation_name,
-                "query_input": dialogflow.QueryInput(text=text_input),
-            }
-        )
-        response_type = text_response.message.message_type
-        
-        # Handle the response based on the message type
-        if response_type == dialogflow.Message.MessageType.TEXT:
-            st.write(f"Bot: {text_response.message.text.text}")
-        elif (
-            response_type == dialogflow.Message.MessageType.CARD
-            or response_type == dialogflow.Message.MessageType.CAROUSEL
-        ):
-            display_card(text_response.message.cards)
+        # Send the message to the API
+        url = f"https://dialogflow.googleapis.com/v2/projects/{project_id}/locations/global/conversations/my-conversation-id/query"
+        response = requests.post(url, headers=headers, json={"queryInput": text_input})
+
+        if response.status_code == 200:
+            response_data = response.json()
+            response_type = response_data["message"]["messageType"]
+
+            # Handle the response based on the message type
+            if response_type == "TEXT":
+                st.write(f"Bot: {response_data['message']['text']['text']}")
+            elif response_type in ["CARD", "CAROUSEL"]:
+                display_card(response_data["message"]["cards"])
+            else:
+                st.write("Sorry, I'm not sure how to respond to that.")
         else:
-            st.write("Sorry, I'm not sure how to respond to that.")
+            print(f"Error sending message: {response.text}")
 
 if __name__ == "__main__":
     app()
