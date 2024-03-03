@@ -8,7 +8,7 @@ from google.cloud import aiplatform
 def app():
 
     project_id = "wvsu-cloud"
-    api_key = API_KEY 
+    api_key = st.secrets["API_KEY"]
 
     st.title("Chatbot using Google Gemini API on Streamlit")
     st.subheader("Enter your message below, and I will respond!")
