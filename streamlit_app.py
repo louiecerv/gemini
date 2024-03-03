@@ -5,9 +5,11 @@ import pandas as pd
 import requests
 from google.cloud import aiplatform
 
+
 # Define the Streamlit app
 def app():
-
+    # Ignore SSL certificate verification (not recommended for production)
+    requests.packages.urllib3.disable_warnings()
     project_id = "wvsu-cloud"
     api_key = st.secrets["API_KEY"]
     st.title("Chatbot using Google Gemini API on Streamlit")
