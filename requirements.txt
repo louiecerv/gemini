@@ -5,5 +5,4 @@ pandas
 seaborn
 scikit-learn
 numpy
-google-cloud
 aiplatform
