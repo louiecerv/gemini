@@ -3,7 +3,7 @@ import altair as alt
 import numpy as np
 import pandas as pd
 import google.cloud.dialogflow as dialogflow
-from google.cloud.dialogflow_v2beta1.services import conversations_client
+from google.cloud.dialogflow import conversations_client
 from google.protobuf import field_mask_pb2
 
 # Define the Streamlit app
