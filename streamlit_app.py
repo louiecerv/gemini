@@ -37,6 +37,7 @@ def app():
 
     # Once the user hits enter, send the message
     if st.button('Submit'): 
+        st.write('Sending prompt...')
         # Set the input text
         text_input = {"text": user_input}
 
@@ -56,7 +57,7 @@ def app():
             else:
                 st.write("Sorry, I'm not sure how to respond to that.")
         else:
-            print(f"Error sending message: {response.text}")
+            st.write(f"Error sending message: {response.text}")
 
 if __name__ == "__main__":
     app()
