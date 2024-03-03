@@ -17,7 +17,8 @@ def app():
     headers = {"Authorization": f"Bearer {api_key}"}
     
     # Model ID for Gemini 1.0 Pro (replace if using a different model)
-    model_id = "projects/{}/locations/global/models/gemini-1.0-pro".format(project_id)
+    # Use a Southeast Asia region like asia-southeast1 instead of global
+    model_id = "projects/{}/locations/asia-southeast1/models/gemini-1.0-pro".format(project_id)
     
     # Input text field
     user_input = st.text_input("Message")
@@ -35,8 +36,8 @@ def app():
             ]
         }
     
-        # Send the request to the Gemini API
-        url = f"https://{project_id}-us.vertexai.googleapis.com/v1/{model_id}:streamGenerateContent"
+        # Send the request to the Gemini API using the chosen region endpoint
+        url = f"https://{project_id}-asia-southeast1.vertexai.googleapis.com/v1/{model_id}:streamGenerateContent"
         response = requests.post(url, headers=headers, json=request_body)
     
         if response.status_code == 200:
