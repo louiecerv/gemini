@@ -6,5 +6,4 @@ seaborn
 scikit-learn
 numpy
 google-cloud-dialogflow
-google-cloud-dialogflow
 googleapis-common-protos
